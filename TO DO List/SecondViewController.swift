@@ -26,17 +26,17 @@ class SecondViewController: UIViewController, UITextFieldDelegate {
     //Events
     @IBAction func btnAddTask(_ sender: UIButton) {
         if(txtTask.text == "" && txtDesc.text == ""){
-            let alertController = UIAlertController(title: "Empty fields!", message: "The fields can not to stay empty.", preferredStyle: UIAlertControllerStyle.alert)
+            let alertController = UIAlertController(title: "Empty fields!", message: "The fields can not stay empty.", preferredStyle: UIAlertControllerStyle.alert)
             alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
             present(alertController, animated: true, completion: nil)
         }
         else if(txtTask.text == ""){
-            let alertController = UIAlertController(title: "Empty field!", message: "The name field can not to stay empty.", preferredStyle: UIAlertControllerStyle.alert)
+            let alertController = UIAlertController(title: "Empty field!", message: "The name field can not stay empty.", preferredStyle: UIAlertControllerStyle.alert)
             alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
             present(alertController, animated: true, completion: nil)
         }
         else if(txtDesc.text == ""){
-            let alertController = UIAlertController(title: "Empty field!", message: "The description field can not to stay empty.", preferredStyle: UIAlertControllerStyle.alert)
+            let alertController = UIAlertController(title: "Empty field!", message: "The description field can not stay empty.", preferredStyle: UIAlertControllerStyle.alert)
             alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
             present(alertController, animated: true, completion: nil)
         }
