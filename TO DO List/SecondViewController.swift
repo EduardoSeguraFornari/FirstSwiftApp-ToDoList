@@ -43,9 +43,9 @@ class SecondViewController: UIViewController, UITextFieldDelegate {
         else{
             taskMgr.addTask(name: txtTask.text!, desc: txtDesc.text!);
             self.view.endEditing(true)
+            saveTask(taskName: txtTask.text!, taskDescription: txtDesc.text!)
             txtTask.text = ""
             txtDesc.text = ""
-            saveTask(taskName: txtTask.text!, taskDescription: txtDesc.text!)
             self.tabBarController?.selectedIndex = 0;
         }
     }
@@ -65,7 +65,6 @@ class SecondViewController: UIViewController, UITextFieldDelegate {
         // we save our entity
         do {
             try moc.save()
-            print("Salvou")
         } catch {
             //fatalError("Failure to save context: \(error)")
         }

@@ -30,7 +30,8 @@
 		60C2B6A51DD50C8D006E0B62 /* TaskManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskManager.swift; sourceTree = "<group>"; };
 		60EDE2371DD6581800C238E0 /* DataController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		60EDE23A1DD6585400C238E0 /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
-		60EDE2771DD67BDD00C238E0 /* Task+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Task+CoreDataClass.swift"; sourceTree = "<group>"; };
+		60EDE2791DD6B85B00C238E0 /* Task+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Task+CoreDataClass.swift"; sourceTree = "<group>"; };
+		60EDE27A1DD6B85B00C238E0 /* Task+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Task+CoreDataProperties.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,7 +48,8 @@
 		60C2B6851DD50B62006E0B62 = {
 			isa = PBXGroup;
 			children = (
-				60EDE2771DD67BDD00C238E0 /* Task+CoreDataClass.swift */,
+				60EDE2791DD6B85B00C238E0 /* Task+CoreDataClass.swift */,
+				60EDE27A1DD6B85B00C238E0 /* Task+CoreDataProperties.swift */,
 				60C2B6901DD50B63006E0B62 /* TO DO List */,
 				60C2B68F1DD50B63006E0B62 /* Products */,
 			);

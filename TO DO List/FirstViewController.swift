@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+import CoreData
 class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     @IBOutlet var tblTasks: UITableView!
@@ -24,7 +24,9 @@ class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     //Returning to view
     override func viewWillAppear(_ animated: Bool) {
+        fetch()
         tblTasks.reloadData()
+        
     }
     
     //
@@ -44,8 +46,25 @@ class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDat
         let cell: UITableViewCell = UITableViewCell(style: UITableViewCellStyle.subtitle, reuseIdentifier: "test")
         cell.textLabel?.text = taskMgr.tasks[indexPath.row].name
         cell.detailTextLabel?.text = taskMgr.tasks[indexPath.row].desc
-        
         return cell
     }
+    
+    func fetch() {
+        let moc = DataController().managedObjectContext
+        let personFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "TaskEntity")
+        var tasks = [task]()
+        do {
+            
+            let fetchedPerson = try moc.fetch(personFetch) as! [Task]
+            for taskAUX in fetchedPerson {
+                tasks.append(task(name: taskAUX.taskName!, desc: taskAUX.taskDescription!))
+            }
+            taskMgr.tasks = tasks
+            
+        } catch {
+            fatalError("Failed to fetch person: \(error)")
+        }
+    }
+    
 }
 
