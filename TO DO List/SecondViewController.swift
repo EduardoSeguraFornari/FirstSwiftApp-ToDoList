@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+import CoreData
 class SecondViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet var txtTask: UITextField!
@@ -26,17 +26,17 @@ class SecondViewController: UIViewController, UITextFieldDelegate {
     //Events
     @IBAction func btnAddTask(_ sender: UIButton) {
         if(txtTask.text == "" && txtDesc.text == ""){
-            let alertController = UIAlertController(title: "Empty fields!", message: "The fields can not stay empty.", preferredStyle: UIAlertControllerStyle.alert)
+            let alertController = UIAlertController(title: "Empty fields!", message: "The fields can't stay empty.", preferredStyle: UIAlertControllerStyle.alert)
             alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
             present(alertController, animated: true, completion: nil)
         }
         else if(txtTask.text == ""){
-            let alertController = UIAlertController(title: "Empty field!", message: "The name field can not stay empty.", preferredStyle: UIAlertControllerStyle.alert)
+            let alertController = UIAlertController(title: "Empty field!", message: "The 'Task Name' field can't stay empty.", preferredStyle: UIAlertControllerStyle.alert)
             alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
             present(alertController, animated: true, completion: nil)
         }
         else if(txtDesc.text == ""){
-            let alertController = UIAlertController(title: "Empty field!", message: "The description field can not stay empty.", preferredStyle: UIAlertControllerStyle.alert)
+            let alertController = UIAlertController(title: "Empty field!", message: "The 'Description' field can't stay empty.", preferredStyle: UIAlertControllerStyle.alert)
             alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
             present(alertController, animated: true, completion: nil)
         }
@@ -45,9 +45,32 @@ class SecondViewController: UIViewController, UITextFieldDelegate {
             self.view.endEditing(true)
             txtTask.text = ""
             txtDesc.text = ""
-        self.tabBarController?.selectedIndex = 0;
+            saveTask(taskName: txtTask.text!, taskDescription: txtDesc.text!)
+            self.tabBarController?.selectedIndex = 0;
         }
     }
+    
+    func saveTask(taskName: String, taskDescription: String) {
+        
+        // create an instance of our managedObjectContext
+        let moc = DataController().managedObjectContext
+        
+        // we set up our entity by selecting the entity and context that we're targeting
+        let entity = NSEntityDescription.insertNewObject(forEntityName: "TaskEntity", into: moc) as! Task
+        
+        // add our data
+        entity.setValue(taskName, forKey: "taskName")
+        entity.setValue(taskDescription, forKey: "taskDescription")
+        
+        // we save our entity
+        do {
+            try moc.save()
+            print("Salvou")
+        } catch {
+            //fatalError("Failure to save context: \(error)")
+        }
+    }
+    
     //IOS Touch Function
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
