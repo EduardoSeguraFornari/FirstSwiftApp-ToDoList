@@ -41,14 +41,24 @@ class SecondViewController: UIViewController, UITextFieldDelegate {
             present(alertController, animated: true, completion: nil)
         }
         else{
-            taskMgr.addTask(name: txtTask.text!, desc: txtDesc.text!);
-            self.view.endEditing(true)
-            saveTask(taskName: txtTask.text!, taskDescription: txtDesc.text!)
-            txtTask.text = ""
-            txtDesc.text = ""
-            self.tabBarController?.selectedIndex = 0;
+            if(validTask(nameTask: txtTask.text!)){
+                taskMgr.addTask(name: txtTask.text!, desc: txtDesc.text!);
+                self.view.endEditing(true)
+                saveTask(taskName: txtTask.text!, taskDescription: txtDesc.text!)
+                txtTask.text = ""
+                txtDesc.text = ""
+                self.tabBarController?.selectedIndex = 0;
+            }
+            else{
+                let alertController = UIAlertController(title: "Unexisting task", message: "This task name is already in use.", preferredStyle: UIAlertControllerStyle.alert)
+                alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+                present(alertController, animated: true, completion: nil)
+            }
+            
         }
     }
+    
+    
     
     func saveTask(taskName: String, taskDescription: String) {
         
@@ -67,6 +77,24 @@ class SecondViewController: UIViewController, UITextFieldDelegate {
             try moc.save()
         } catch {
             //fatalError("Failure to save context: \(error)")
+        }
+    }
+    
+    func validTask(nameTask: String) -> Bool{
+        let moc = DataController().managedObjectContext
+        let taskFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "TaskEntity")
+        do {
+            
+            let fetchedTask = try moc.fetch(taskFetch) as! [Task]
+            for taskAUX in fetchedTask {
+                if(nameTask == taskAUX.taskName!){
+                    return false
+                }
+            }
+            return true
+            
+        } catch {
+            fatalError("Failed to validate task: \(error)")
         }
     }
     

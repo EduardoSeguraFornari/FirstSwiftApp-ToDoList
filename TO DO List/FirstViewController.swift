@@ -32,6 +32,8 @@ class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDat
     //
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath){
         if(editingStyle == UITableViewCellEditingStyle.delete){
+            let taskName = taskMgr.tasks[indexPath.row].name;
+            deleteTask(taskName: taskName)
             taskMgr.tasks.remove(at: indexPath.row)
             tblTasks.reloadData()
         }
@@ -51,18 +53,49 @@ class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     func fetch() {
         let moc = DataController().managedObjectContext
-        let personFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "TaskEntity")
+        let taskFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "TaskEntity")
         var tasks = [task]()
         do {
             
-            let fetchedPerson = try moc.fetch(personFetch) as! [Task]
-            for taskAUX in fetchedPerson {
+            let fetchedTask = try moc.fetch(taskFetch) as! [Task]
+            for taskAUX in fetchedTask {
                 tasks.append(task(name: taskAUX.taskName!, desc: taskAUX.taskDescription!))
             }
             taskMgr.tasks = tasks
             
         } catch {
             fatalError("Failed to fetch person: \(error)")
+        }
+    }
+    
+    func deleteTask(taskName: String) -> Bool {
+        let moc = DataController().managedObjectContext
+        let taskFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "TaskEntity")
+        do {
+            
+            let fetchedTask = try moc.fetch(taskFetch) as! [Task]
+            for taskAUX in fetchedTask {
+                if(taskName == taskAUX.taskName!){
+                    
+                    let task = taskAUX as NSManagedObject
+                    
+                    moc.delete(task)
+
+                    do {
+                        try moc.save()
+                    } catch {
+                        let saveError = error as NSError
+                        print(saveError)
+                    }
+                    
+                    
+                    return true
+                }
+            }
+            return false
+            
+        } catch {
+            fatalError("Failed to validate task: \(error)")
         }
     }
     
