@@ -17,8 +17,8 @@ class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDat
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        fetch()
-        tblTasks.reloadData()
+//        fetch()
+//        tblTasks.reloadData()
     }
 
     override func didReceiveMemoryWarning() {
@@ -36,10 +36,10 @@ class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDat
     //
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath){
         if(editingStyle == UITableViewCellEditingStyle.delete){
-           if let task = taskMgr.tasks[indexPath.row] as Task?{
-            deleteTask(task: task)
-            taskMgr.tasks.remove(at: indexPath.row)
-            tblTasks.reloadData()
+            if let task = taskMgr.tasks[indexPath.row] as Task?{
+                deleteTask(task: task)
+                taskMgr.tasks.remove(at: indexPath.row)
+                tblTasks.reloadData()
             }
         }
     }
@@ -58,17 +58,10 @@ class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     func fetch() {
         let taskFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "TaskEntity")
-//        var tasks = [Task]()
         do {
             
             let fetchedTask = try moc.fetch(taskFetch) as! [Task]
             print(fetchedTask)
-//            for taskAUX in fetchedTask {
-//                let task = Task()
-//                task.taskName = taskAUX.taskName
-//                task.taskDescription = taskAUX.taskDescription
-//                tasks.append(task)
-//            }
             taskMgr.tasks = fetchedTask
             
         } catch {
