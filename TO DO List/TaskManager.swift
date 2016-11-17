@@ -2,17 +2,12 @@ import UIKit
 
 var taskMgr: TaskManager = TaskManager()
 
-struct task{
-    var name = "Un-Named"
-    var desc = "Un-Described"
-}
-
 class TaskManager: NSObject {
     
-    var tasks = [task]()
+    var tasks = [Task]()
     
-    func addTask(name: String, desc: String){
-        tasks.append(task(name: name, desc: desc))
+    func addTask(task: Task){
+        tasks.append(task)
     }
 
 }

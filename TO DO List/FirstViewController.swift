@@ -11,10 +11,14 @@ import CoreData
 class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     @IBOutlet var tblTasks: UITableView!
+    let moc = DataController().managedObjectContext
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        fetch()
+        tblTasks.reloadData()
     }
 
     override func didReceiveMemoryWarning() {
@@ -32,10 +36,11 @@ class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDat
     //
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath){
         if(editingStyle == UITableViewCellEditingStyle.delete){
-            let taskName = taskMgr.tasks[indexPath.row].name;
-            deleteTask(taskName: taskName)
+           if let task = taskMgr.tasks[indexPath.row] as Task?{
+            deleteTask(task: task)
             taskMgr.tasks.remove(at: indexPath.row)
             tblTasks.reloadData()
+            }
         }
     }
 
@@ -46,56 +51,42 @@ class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell{
         let cell: UITableViewCell = UITableViewCell(style: UITableViewCellStyle.subtitle, reuseIdentifier: "test")
-        cell.textLabel?.text = taskMgr.tasks[indexPath.row].name
-        cell.detailTextLabel?.text = taskMgr.tasks[indexPath.row].desc
+        cell.textLabel?.text = taskMgr.tasks[indexPath.row].taskName
+        cell.detailTextLabel?.text = taskMgr.tasks[indexPath.row].taskDescription
         return cell
     }
     
     func fetch() {
-        let moc = DataController().managedObjectContext
         let taskFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "TaskEntity")
-        var tasks = [task]()
+//        var tasks = [Task]()
         do {
             
             let fetchedTask = try moc.fetch(taskFetch) as! [Task]
-            for taskAUX in fetchedTask {
-                tasks.append(task(name: taskAUX.taskName!, desc: taskAUX.taskDescription!))
-            }
-            taskMgr.tasks = tasks
+            print(fetchedTask)
+//            for taskAUX in fetchedTask {
+//                let task = Task()
+//                task.taskName = taskAUX.taskName
+//                task.taskDescription = taskAUX.taskDescription
+//                tasks.append(task)
+//            }
+            taskMgr.tasks = fetchedTask
             
         } catch {
-            fatalError("Failed to fetch person: \(error)")
+            fatalError("Failed to fetch task: \(error)")
         }
     }
     
-    func deleteTask(taskName: String) -> Bool {
-        let moc = DataController().managedObjectContext
-        let taskFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "TaskEntity")
+    func deleteTask(task: Task) -> Bool {
+        
+        moc.delete(task)
+        
         do {
-            
-            let fetchedTask = try moc.fetch(taskFetch) as! [Task]
-            for taskAUX in fetchedTask {
-                if(taskName == taskAUX.taskName!){
-                    
-                    let task = taskAUX as NSManagedObject
-                    
-                    moc.delete(task)
-
-                    do {
-                        try moc.save()
-                    } catch {
-                        let saveError = error as NSError
-                        print(saveError)
-                    }
-                    
-                    
-                    return true
-                }
-            }
-            return false
-            
+            try moc.save()
+            return true
         } catch {
-            fatalError("Failed to validate task: \(error)")
+            let saveError = error as NSError
+            print(saveError)
+            return false
         }
     }
     

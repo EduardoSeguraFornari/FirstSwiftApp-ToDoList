@@ -10,6 +10,9 @@ import UIKit
 import CoreData
 class SecondViewController: UIViewController, UITextFieldDelegate {
     
+    // create an instance of our managedObjectContext
+    let moc = DataController().managedObjectContext
+    
     @IBOutlet var txtTask: UITextField!
     @IBOutlet var txtDesc: UITextField!
 
@@ -42,9 +45,10 @@ class SecondViewController: UIViewController, UITextFieldDelegate {
         }
         else{
             if(validTask(nameTask: txtTask.text!)){
-                taskMgr.addTask(name: txtTask.text!, desc: txtDesc.text!);
+                
+                let task = saveTask(taskName: txtTask.text!, taskDescription: txtDesc.text!)
+                taskMgr.addTask(task: task);
                 self.view.endEditing(true)
-                saveTask(taskName: txtTask.text!, taskDescription: txtDesc.text!)
                 txtTask.text = ""
                 txtDesc.text = ""
                 self.tabBarController?.selectedIndex = 0;
@@ -60,11 +64,7 @@ class SecondViewController: UIViewController, UITextFieldDelegate {
     
     
     
-    func saveTask(taskName: String, taskDescription: String) {
-        
-        // create an instance of our managedObjectContext
-        let moc = DataController().managedObjectContext
-        
+    func saveTask(taskName: String, taskDescription: String) -> Task {
         // we set up our entity by selecting the entity and context that we're targeting
         let entity = NSEntityDescription.insertNewObject(forEntityName: "TaskEntity", into: moc) as! Task
         
@@ -78,10 +78,10 @@ class SecondViewController: UIViewController, UITextFieldDelegate {
         } catch {
             //fatalError("Failure to save context: \(error)")
         }
+        return entity
     }
     
     func validTask(nameTask: String) -> Bool{
-        let moc = DataController().managedObjectContext
         let taskFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "TaskEntity")
         do {
             
