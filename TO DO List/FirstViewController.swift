@@ -8,17 +8,17 @@
 
 import UIKit
 import CoreData
+
 class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+    
+    var task: Task = Task()
 
-    @IBOutlet var tblTasks: UITableView!
+    @IBOutlet var tasksUITableView: UITableView!
+    
     let moc = DataController().managedObjectContext
-
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-//        fetch()
-//        tblTasks.reloadData()
     }
 
     override func didReceiveMemoryWarning() {
@@ -29,17 +29,16 @@ class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDat
     //Returning to view
     override func viewWillAppear(_ animated: Bool) {
         fetch()
-        tblTasks.reloadData()
+        tasksUITableView.reloadData()
         
     }
     
-    //
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath){
         if(editingStyle == UITableViewCellEditingStyle.delete){
             if let task = taskMgr.tasks[indexPath.row] as Task?{
                 deleteTask(task: task)
                 taskMgr.tasks.remove(at: indexPath.row)
-                tblTasks.reloadData()
+                tasksUITableView.reloadData()
             }
         }
     }
@@ -61,7 +60,6 @@ class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDat
         do {
             
             let fetchedTask = try moc.fetch(taskFetch) as! [Task]
-            print(fetchedTask)
             taskMgr.tasks = fetchedTask
             
         } catch {
@@ -83,5 +81,18 @@ class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDat
         }
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let task = taskMgr.tasks[indexPath.row] as Task?{
+            self.task = task
+        }
+        performSegue(withIdentifier: "TaskSegue", sender: self)
+    }
+    
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let destinationViewController: TaskViewController = segue.destination as! TaskViewController;
+        destinationViewController.task = task
+        destinationViewController.moc = self.moc
+    }
 }
 
